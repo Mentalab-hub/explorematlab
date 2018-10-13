@@ -6,12 +6,11 @@ This guide helps you to setup a labstreaminglayer (LSL) connection in order to s
 Follow [this tutorial](https://github.com/Mentalab-hub/libexplorecpp) to install the C++ API.
 
 ### labstreaminglayer
-You need to install LSL on your computer. Follow [this instruction](https://github.com/sccn/labstreaminglayer/blob/master/INSTALL.md) to install and build LSL and its dependencies. You might be able to use pre-compiled LSL from [here](ftp://sccn.ucsd.edu/pub/software/LSL/SDK/) instead of installing LSL from scratch. However, these binary releases might not work on all operating systems with different architectures.
+* You need to install LSL on your computer. Follow [this instruction](https://github.com/sccn/labstreaminglayer/blob/master/INSTALL.md) to install and build LSL and its dependencies. You might be able to use pre-compiled LSL from [here](ftp://sccn.ucsd.edu/pub/software/LSL/SDK/) instead of installing LSL from scratch. However, these binary releases might not work on all operating systems with different architectures.
 
-Create a new Visual Studio project and include API library. Add “lsl_cpp.h” to the project libraries.
+* Create a new Visual Studio project and include API library. Add “lsl_cpp.h” to the project libraries.
 Copy LSL bin folder (containing LSL binary files) to your project folder and add it to your project libraries (Project properties > Linker > General > Additional Library Directories). 
 Use acquisition_server class for acquiring data and sending to LSL. (Look at [this example](NOTHING))
-
 
 ### Openvibe:
 * Download and install Openvibe from [this link](http://openvibe.inria.fr/downloads/).
