@@ -17,5 +17,5 @@ This guide helps you to setup a labstreaminglayer (LSL) connection in order to s
    * Add liblsl-matlab folder and all subfolders to Matlab path.
    * Run the examples for getting the data in real time from the device.
    * The default setting in the example is for 4-channel device. If you are using an 8-channel device, change the following variables from 4 to 8:
-     * Line 31: block.OutputPort(1).Dimensions       = 4; % Number of EEG channels
-     * Line 73:  block.Dwork(1).Dimensions      = 4;  % Number of EEG channels
+     * Line 31: 'block.OutputPort(1).Dimensions       = 4; % Number of EEG channels'
+     * Line 73:  'block.Dwork(1).Dimensions      = 4;  % Number of EEG channels'
