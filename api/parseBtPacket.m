@@ -1,4 +1,4 @@
-function [output] = parsePacket(fid)
+function [output] = parseBtPacket(fid)
 % Parse the incoming data package
 %   This function reads and parses one data package from the input stream.
 %   
@@ -38,13 +38,13 @@ interruptWarning = 'Stream interrupted unexpectedly!';
 fletcherMismatchWarning = 'Fletcher mismatch!';
 pidUnexpectedWarning = 'Unexpected package ID: ';
 
-[pid,n] = fread(fid,1,'*ubit8');    % Read the package ID
+[pid,n] = fread(fid,1,'uint8');    % Read the package ID
 if n==0
     warning(interruptWarning);
     output.type = 'end';
     return; % No data in the stream/file
 end
-output.cnt = fread(fid,1,'*ubit8');        % Counter of the package
+output.cnt = fread(fid,1,'uint8');        % Counter of the package
 payload = fread(fid,1,'uint16');    % Number of bytes in the package
 output.timestamp = fread(fid,1,'uint32')/100;  % Timestamp of the package in second
 
@@ -56,13 +56,13 @@ switch pid
     
     case 19         % Environment package
         output.type = 'env';
-        output.temperature = fread(fid,1,'*bit8');
+        output.temperature = fread(fid,1,'int8');
         output.light = (1000/4095) * fread(fid,1,'uint16'); % In Lux
         output.battery = (16.8/6.8) * (1.8/2457) * fread(fid,1,'uint16'); % In volts
     
     case {144, 146, 30, 62} % EEG package
-        [temp,n] = fread(fid,(payload-8)/3,'*bit24');
-        if n< ((payload-8)/3) %check if the package terminates in between
+        [temp,n] = fread(fid,(payload-8),'uint8');
+        if n< (payload-8) %check if the package terminates in between
             warning(interruptWarning);
             output.type = 'end';
             return;
@@ -88,6 +88,7 @@ switch pid
             vref = 4.5;
             nPacket = [];
         end
+        temp = byte2int24(temp); %rand(5,33);
         temp = reshape(temp,[nChan,nPacket]);
         output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) * 6/32; % Calculate the real voltage value
         %output.status = temp(1,:);    %save the status of data points
@@ -96,13 +97,13 @@ switch pid
         output.ts = fread(fid,(payload-8)/4,'uint32');
     otherwise
         warning([pidUnexpectedWarning pid])
-        temp = fread(fid,payload-8,'*bit8'); % Read the payload
+        temp = fread(fid,payload-8,'uint8'); % Read the payload
         output.type = 'end';
 end
 
 
 % Check the consistency of the Fletcher
-[fletcher, n] = fread(fid,4,'*ubit8');
+[fletcher, n] = fread(fid,4,'uint8');
 if n<4
     warning(interruptWarning);
 elseif((pid~=27)&&(fletcher(4) ~= 222)) || ((pid==27)&&(fletcher(4)~=255))
