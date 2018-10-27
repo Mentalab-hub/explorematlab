@@ -23,5 +23,5 @@ Use acquisition_server class for acquiring data and sending to LSL. (Look at [th
 * Add liblsl-matlab folder and all subfolders to Matlab path.
 * Run the examples for getting the data in real time from the device.
 * The default setting in the example is for 4-channel device. If you are using an 8-channel device, change the following variables from 4 to 8:
-  * Line 31:  _'block.OutputPort(1).Dimensions       = 4; % Number of EEG channels'_
-  * Line 73:   _'block.Dwork(1).Dimensions      = 4;  % Number of EEG channels'_
+  * Line 31:  _'<block.OutputPort(1).Dimensions       = 4; % Number of EEG channels>'_
+  * Line 73:   _'<block.Dwork(1).Dimensions      = 4;  % Number of EEG channels>'_
