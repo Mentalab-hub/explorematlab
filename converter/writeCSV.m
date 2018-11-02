@@ -1,4 +1,4 @@
-function [outputArg1,outputArg2] = writeCSV(EEG, ORN, file)
+function writeCSV(EEG, ORN, file)
 % Write data into csv file
 %   This function gets the data structure and saves data into a csv file.
 %   
