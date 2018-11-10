@@ -1,4 +1,4 @@
-function eeg_api_client(block)
+function eeg8_api_client(block)
 %   A MATLAB S-function for acquisition of EEG singal from Mentalab Explore
 %   device.
 
@@ -28,7 +28,7 @@ block.SetPreCompOutPortInfoToDynamic;
 % block.InputPort(1).DirectFeedthrough = true;
 
 % Override output port properties
-block.OutputPort(1).Dimensions       = [33, 4]; % Samples x EEG channels
+block.OutputPort(1).Dimensions       = [18, 8]; % Samples x EEG channels
 block.OutputPort(1).DatatypeID  = 0; % double
 block.OutputPort(1).Complexity  = 'Real';
 block.OutputPort(1).SamplingMode = 'Sample';
@@ -75,7 +75,7 @@ function DoPostPropSetup(block)
 block.NumDworks = 2;
   
   block.Dwork(1).Name            = 'x1';
-  block.Dwork(1).Dimensions      = 4;  % Number of EEG channels
+  block.Dwork(1).Dimensions      = 8;  % Number of EEG channels
   block.Dwork(1).DatatypeID      = 0;      % double
   block.Dwork(1).Complexity      = 'Real'; % real
   block.Dwork(1).UsedAsDiscState = true;
@@ -138,7 +138,7 @@ while read
     switch package.type
         case 'orn'
              %block.Dwork(2).Data = rand(1,9); % package.orn';
-        case 'eeg4'
+        case 'eeg8'
             block.OutputPort(1).Data = package.data';
             read = 0;
         case 'end'
