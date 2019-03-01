@@ -73,7 +73,7 @@ switch pid
             vref = 2.4;
             nPacket = 33;
             temp = reshape(temp,[nChan,nPacket]);
-            output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) * 6/32; % Calculate the real voltage value
+            output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
             %output.status = temp(1,:);    %save the status of data points
         elseif pid == 146
             output.type = 'eeg8';
@@ -91,7 +91,7 @@ switch pid
             vref = 4.5;
             nPacket = 18;
             temp = reshape(temp,[nChan,nPacket]);
-            output.data = double(temp)* vref / ( 2^23 - 1 ) * 6/32; % Calculate the real voltage value
+            output.data = double(temp)* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
         end
 
     case 27
