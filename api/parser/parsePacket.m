@@ -60,7 +60,7 @@ switch pid
         output.light = (1000/4095) * fread(fid,1,'uint16'); % In Lux
         output.battery = (16.8/6.8) * (1.8/2457) * fread(fid,1,'uint16'); % In volts
     
-    case {144, 146, 30, 62} % EEG package
+    case {144, 208, 146, 210, 30, 62} % EEG package
         [temp,n] = fread(fid,(payload-8)/3,'*bit24');
         if n< ((payload-8)/3) %check if the package terminates in between
             warning(interruptWarning);
@@ -94,9 +94,14 @@ switch pid
             output.data = double(temp)* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
         end
 
-    case 27
+    case 27     # TimeStamp
         output.type = 'ts';
         output.ts = fread(fid,(payload-8)/4,'uint32');
+    case 99     # Device info
+        output.type = 'fw';
+        output.fw = fread(fid, 1, 'uint32');
+    case 111    # Disconnect packet
+        output.type = 'dis';
     otherwise
         warning([pidUnexpectedWarning pid])
         temp = fread(fid,payload-8,'*bit8'); % Read the payload
