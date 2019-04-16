@@ -67,7 +67,7 @@ switch pid
             output.type = 'end';
             return;
         end
-        if pid == 144  % Specify the number of channel and reference voltage
+        if (pid == 144) | (pid == 208)  % Specify the number of channel and reference voltage
             output.type = 'eeg4';
             nChan = 5;      % 4 channels + 1 status
             vref = 2.4;
@@ -75,7 +75,7 @@ switch pid
             temp = reshape(temp,[nChan,nPacket]);
             output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
             %output.status = temp(1,:);    %save the status of data points
-        elseif pid == 146
+        elseif (pid == 146) | (pid == 210)
             output.type = 'eeg8';
             nChan = 9;      % 8 channels + 1 status
             vref = 2.4;
