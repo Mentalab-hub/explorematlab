@@ -88,13 +88,15 @@ block.NumDworks = 1;
 %%
 function InitializeConditions(block)
 
-HardwareInfo = instrhwinfo('Bluetooth','Explore');
+eml.extrinsic('evalin');
+device_name = evalin('base', 'device_name');
+
+HardwareInfo = instrhwinfo('Bluetooth',device_name);
 channel = HardwareInfo.Channels{1,1};
 
 global bt
-bt = Bluetooth('Explore', str2num(channel));
+bt = Bluetooth(device_name, str2num(channel));
 fopen(bt);
-
 %end InitializeConditions
 
 
