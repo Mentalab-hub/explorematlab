@@ -60,14 +60,14 @@ switch pid
         output.light = (1000/4095) * fread(fid,1,'uint16'); % In Lux
         output.battery = (16.8/6.8) * (1.8/2457) * fread(fid,1,'uint16'); % In volts
     
-    case {144, 146, 30, 62} % EEG package
+    case {144, 146, 30, 62, 208, 210} % EEG package
         [temp,n] = fread(fid,(payload-8),'uint8');
         if n< (payload-8) %check if the package terminates in between
             warning(interruptWarning);
             output.type = 'end';
             return;
         end
-        if pid == 144  % Specify the number of channel and reference voltage
+        if (pid == 144) | (pid == 208)  % Specify the number of channel and reference voltage
             output.type = 'eeg4';
             nChan = 5;      % 4 channels + 1 status
             vref = 2.4;
@@ -75,7 +75,7 @@ switch pid
             temp = byte2int24(temp);
             temp = reshape(temp,[nChan,nPacket]);
             output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
-        elseif pid == 146
+        elseif (pid == 146) | (pid == 210)
             output.type = 'eeg8';
             nChan = 9;      % 8 channels + 1 status
             vref = 2.4;
@@ -98,6 +98,12 @@ switch pid
     case 27
         output.type = 'ts';
         output.ts = fread(fid,(payload-8)/4,'uint32');
+    case 111
+        output.type = 'disconnect';
+    case 99
+        output.type = 'dev_info';
+        fw_str = num2str(fread(fid,(payload-8)/4,'uint32'));
+        output.fw_version = [fw_str(1) '.' fw_str(2) '.' fw_str(3)];
     otherwise
         warning([pidUnexpectedWarning pid])
         temp = fread(fid,payload-8,'uint8'); % Read the payload
