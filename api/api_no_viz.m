@@ -5,9 +5,10 @@
 % Github page: https://github.com/Mentalab-hub/explorematlab/ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-HardwareInfo = instrhwinfo('Bluetooth','Explore');
+device_name = 'Explore_1438';
+HardwareInfo = instrhwinfo('Bluetooth',device_name);
 channel = HardwareInfo.Channels{1,1};
-bt = Bluetooth('Explore', str2num(channel));
+bt = Bluetooth(device_name, str2num(channel));
 fopen(bt);
 
 
@@ -26,6 +27,8 @@ while is_acquiring
         case 'eeg8'
             eeg8_data = package.data;
             disp(eeg8_data(:,end)) % Prints the last sample
+        case 'dev_info'
+            disp(['Explore firmware version: ' package.fw_version]);
         case 'end'
             is_acquiring = 0;
     end
