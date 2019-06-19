@@ -19,4 +19,4 @@ This package provides some Matlab scripts for Mentalab Explore device. Using the
 * For real-time signal acquisition directly with Matlab see this [link](https://github.com/Mentalab-hub/explorematlab/tree/master/api)
 
 ## License
-This project is licensed under the [GNU General Public License v3.0](LICENSE) License
+This project is licensed under the [GNU General Public License v3.0](LICENSE)
