@@ -17,3 +17,6 @@ This package provides some Matlab scripts for Mentalab Explore device. Using the
   * The scripts converts and saves EEG and orientation data in two separated csv files in the same folder as original binary file
 * For real-time signal acquisition from C++ API see this [link](https://github.com/Mentalab-hub/explorematlab/tree/master/lsl-acquisition)
 * For real-time signal acquisition directly with Matlab see this [link](https://github.com/Mentalab-hub/explorematlab/tree/master/api)
+
+## License
+This project is licensed under the [GNU General Public License v3.0](LICENSE) License
