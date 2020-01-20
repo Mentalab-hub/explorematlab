@@ -67,7 +67,7 @@ switch pid
             output.type = 'end';
             return;
         end
-        if (pid == 144) | (pid == 208)  % Specify the number of channel and reference voltage
+        if (pid == 144) || (pid == 208)  % Specify the number of channel and reference voltage
             output.type = 'eeg4';
             nChan = 5;      % 4 channels + 1 status
             vref = 2.4;
@@ -75,16 +75,22 @@ switch pid
             temp = byte2int24(temp);
             temp = reshape(temp,[nChan,nPacket]);
             output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
-        elseif (pid == 146) | (pid == 210)
+        elseif (pid == 146) || (pid == 210)
             output.type = 'eeg8';
             nChan = 9;      % 8 channels + 1 status
             vref = 2.4;
-            nPacket = [];
+            nPacket = 16;
+            temp = byte2int24(temp);
+            temp = reshape(temp,[nChan,nPacket]);
+            output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
         elseif pid == 30
             output.type = 'eeg8';
             nChan = 9;      % 8 channels + 1 status
             vref = 4.5;
-            nPacket = [];
+            nPacket = 16;
+            temp = byte2int24(temp);
+            temp = reshape(temp,[nChan,nPacket]);
+            output.data = double(temp(2:end,:))* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
         elseif pid == 62
             output.type = 'eeg8';
             nChan = 8;      % 8 channels
@@ -102,8 +108,13 @@ switch pid
         output.type = 'disconnect';
     case 99
         output.type = 'dev_info';
-        fw_str = num2str(fread(fid,(payload-8)/4,'uint32'));
+        fw_str = num2str(fread(fid,1,'uint16'));
         output.fw_version = [fw_str(1) '.' fw_str(2) '.' fw_str(3)];
+        output.data_rate = 16000/(2^fread(fid,1,'uint8'));
+        output.adc_mask = dec2bin(fread(fid,1,'uint8'),8);
+    case 194
+        output.type = 'marker_event';
+        output.code = fread(fid,1,'uint16');
     otherwise
         warning([pidUnexpectedWarning pid])
         temp = fread(fid,payload-8,'uint8'); % Read the payload
