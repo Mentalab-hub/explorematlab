@@ -16,3 +16,7 @@ This API allows you to get the data directly from Explore device via MATLAB soft
 * For EEG signal visualization in Simulink open and run "eeg4_demo.slx" or "eeg8_demo.slx" for 4 and 8 channel devices respectively. Before running, enter the device name in Matlab editor by `device_name = "Explore_####";`
 * For orientation data visualization in Simulink open and run "orn_demo.slx". Before running the scenario, enter the device name in Matlab editor by `device_name = "Explore_####";`
 
+
+NOTE!
+If your firmware version is above 2.1.0 use [this](https://github.com/Mentalab-hub/explorematlab/blob/master/lsl-acquisition/example.slx) parser, otherwise use [this one](https://github.com/Mentalab-hub/explorematlab/blob/master/api/parser/parsePacket.m)
+
