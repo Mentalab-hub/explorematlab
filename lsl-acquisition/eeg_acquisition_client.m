@@ -89,7 +89,7 @@ function InitializeConditions(block)
 lib = lsl_loadlib();
 result = {};
 while isempty(result)
-    result = lsl_resolve_byprop(lib,'type','EEG'); % Choose the stream by type or name
+    result = lsl_resolve_byprop(lib,'type','ExG'); % Choose the stream by type or name
 end
 global inlet
 inlet = lsl_inlet(result{1});
