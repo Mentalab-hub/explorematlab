@@ -28,7 +28,7 @@ block.SetPreCompOutPortInfoToDynamic;
 % block.InputPort(1).DirectFeedthrough = true;
 
 % Override output port properties
-block.OutputPort(1).Dimensions       = [18, 8]; % Samples x EEG channels
+block.OutputPort(1).Dimensions       = [16, 8]; % Samples x EEG channels
 block.OutputPort(1).DatatypeID  = 0; % double
 block.OutputPort(1).Complexity  = 'Real';
 block.OutputPort(1).SamplingMode = 'Sample';

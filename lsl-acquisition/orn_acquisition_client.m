@@ -90,7 +90,7 @@ function InitializeConditions(block)
 lib = lsl_loadlib();
 result = {};
 while isempty(result)
-    result = lsl_resolve_byprop(lib,'type','ORN'); % Choose the stream by type or name
+    result = lsl_resolve_byprop(lib,'type','Orientation'); % Choose the stream by type or name
 end
 global orn_inlet
 orn_inlet = lsl_inlet(result{1});
