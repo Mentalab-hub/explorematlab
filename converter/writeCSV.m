@@ -1,4 +1,4 @@
-function writeCSV(EEG, ORN, file)
+function writeCSV(EEG, ORN, Marker, file)
 % Write data into csv file
 %   This function gets the data structure and saves data into a csv file.
 %   
@@ -18,32 +18,33 @@ function writeCSV(EEG, ORN, file)
 nChan = size(EEG.data, 1);
 
 %% Writing the header
-csvFileName_eeg = strcat(file(1:end-4),'_EEG.csv');
+csvFileName_eeg = strcat(file(1:end-4),'_ExG.csv');
 csvFileName_orn = strcat(file(1:end-4),'_ORN.csv');
+csvFileName_marker = strcat(file(1:end-4),'_Marker.csv');
+
 
 fid_eeg = fopen(csvFileName_eeg,'w'); 
 fid_orn = fopen(csvFileName_orn,'w');
+fid_marker = fopen(csvFileName_marker,'w');
 
-fprintf(fid_eeg,'%s, ','TimeStamp');
+fprintf(fid_eeg,'TimeStamp, ');
 
 for i=1:nChan
     fprintf(fid_eeg,'%s, ',strcat('ch',int2str(i)));
 end
-
-fprintf(fid_eeg,'\n%s, ','hh:mm:ss');
-for i=1:nChan
-    fprintf(fid_eeg,'%s, ','mV');
-end
 fprintf(fid_eeg,'\n');
 
-fprintf(fid_orn,'%s \n','TimeStamp, ax, ay, az, gx, gy, gz, mx, my, mz');
-fprintf(fid_orn,'%s \n, ','hh:mm:ss, mg/LSB, mg/LSB, mg/LSB, mdps/LSB, mdps/LSB, mdps/LSB, mgauss/LSB, mgauss/LSB, mgauss/LSB');
+fprintf(fid_orn,'%s\n','TimeStamp, ax, ay, az, gx, gy, gz, mx, my, mz');
+
+fprintf(fid_marker,'TimeStamp, Code\n');
 
 %% Writing the data into csv file
 dlmwrite(csvFileName_eeg, cat(2,EEG.timestamp', EEG.data'), '-append');
 dlmwrite(csvFileName_orn, cat(2,ORN.timestamp', ORN.data'), '-append');
+dlmwrite(csvFileName_marker, cat(2, Marker.timestamp, Marker.code), '-append');
 
 fclose(fid_eeg);
 fclose(fid_orn);
+fclose(fid_marker);
 end
 
