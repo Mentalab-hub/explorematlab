@@ -34,7 +34,7 @@ function [output] = parseBtPacket(fid)
 
 output = [];
 
-interruptWarning = 'Stream interrupted unexpectedly!';
+interruptWarning = 'Stream interrupted unexpectedly! End of file/stream!';
 fletcherMismatchWarning = 'Fletcher mismatch!';
 pidUnexpectedWarning = 'Unexpected package ID: ';
 
