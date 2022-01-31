@@ -115,6 +115,9 @@ switch pid
     case 194
         output.type = 'marker_event';
         output.code = fread(fid,1,'uint16');
+    case {192, 193, 195}    % Not implemented packets
+        fread(fid, payload-8, 'uint8');
+        output.type = 'unimplemented';
     otherwise
         warning([pidUnexpectedWarning pid])
         temp = fread(fid,payload-8,'uint8'); % Read the payload
