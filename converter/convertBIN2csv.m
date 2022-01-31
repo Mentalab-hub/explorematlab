@@ -36,9 +36,11 @@ while read
             ORN.data = cat(2, ORN.data, packet.orn);
             ORN.timestamp = cat(2, ORN.timestamp, packet.timestamp);
         case {'eeg4', 'eeg8'}
+            nSample = size(packet.data, 2);
+            t = linspace(packet.timestamp, packet.timestamp + ...
+                (nSample - 1)/device_info.data_rate, nSample);
             EEG.data = cat(2, EEG.data, packet.data);
-            EEG.timestamp = cat(2,EEG.timestamp, repmat(packet.timestamp,...
-                1, size(packet.data, 2)));
+            EEG.timestamp = cat(2,EEG.timestamp, t);
         case 'marker_event'
             Marker.timestamp = cat(1, Marker.timestamp, packet.timestamp);
             Marker.code = cat(1, Marker.code, packet.code);

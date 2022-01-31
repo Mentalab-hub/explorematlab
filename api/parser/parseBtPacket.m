@@ -35,6 +35,7 @@ function [output] = parseBtPacket(fid)
 output = [];
 
 EXG_UNIT = 1e-6;
+TIMESTAMP_SCALE = 10000;
 interruptWarning = 'Stream interrupted unexpectedly! End of file/stream!';
 fletcherMismatchWarning = 'Fletcher mismatch!';
 pidUnexpectedWarning = 'Unexpected package ID: ';
@@ -47,7 +48,7 @@ if n==0
 end
 output.cnt = fread(fid,1,'uint8');        % Counter of the package
 payload = fread(fid,1,'uint16');    % Number of bytes in the package
-output.timestamp = fread(fid,1,'uint32')/100;  % Timestamp of the package in second
+output.timestamp = fread(fid,1,'uint32')/TIMESTAMP_SCALE;  % Timestamp of the package in second
 
 switch pid
     case 13         % Orientation package
