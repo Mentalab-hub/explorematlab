@@ -39,8 +39,8 @@ fprintf(fid_orn,'%s\n','TimeStamp, ax, ay, az, gx, gy, gz, mx, my, mz');
 fprintf(fid_marker,'TimeStamp, Code\n');
 
 %% Writing the data into csv file
-dlmwrite(csvFileName_eeg, cat(2,EEG.timestamp', EEG.data'), '-append');
-dlmwrite(csvFileName_orn, cat(2,ORN.timestamp', ORN.data'), '-append');
+dlmwrite(csvFileName_eeg, cat(2,EEG.timestamp', EEG.data'), '-append', 'precision','%.4f');
+dlmwrite(csvFileName_orn, cat(2,ORN.timestamp', ORN.data'), '-append', 'precision','%.4f');
 dlmwrite(csvFileName_marker, cat(2, Marker.timestamp, Marker.code), '-append');
 
 fclose(fid_eeg);
