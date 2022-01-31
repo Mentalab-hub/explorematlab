@@ -34,6 +34,7 @@ function [output] = parseBtPacket(fid)
 
 output = [];
 
+EXG_UNIT = 1e-6;
 interruptWarning = 'Stream interrupted unexpectedly! End of file/stream!';
 fletcherMismatchWarning = 'Fletcher mismatch!';
 pidUnexpectedWarning = 'Unexpected package ID: ';
@@ -100,7 +101,7 @@ switch pid
             temp = reshape(temp,[nChan,nPacket]);
             output.data = double(temp)* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
         end
-        
+        output.data =  round(output.data/EXG_UNIT, 2);
     case 27
         output.type = 'ts';
         output.ts = fread(fid,(payload-8)/4,'uint32');
