@@ -9,6 +9,11 @@
 [file,path] = uigetfile('*.BIN');
 filepath = strcat(path,file);
 
+AdcMaskWarningMsg = ['The ADC mask has been changed in the binary' ...
+                    ' file. This script is not able to process such ' ...
+                    'a binary file. Please use Explorepy for '... 
+                    'converting the file.'];
+                
 fid = fopen(filepath);
 read = 1;
 ORN.data = [];
@@ -45,9 +50,17 @@ while read
         case 'ts'
             TS = cat(2, TS, packet.ts);
         case 'dev_info'
+            if exist('device_info', 'var') && ~strcmp(packet.adc_mask, device_info.adc_mask)
+                display(['Old ADC mask: ' device_info.adc_mask]);
+                display(['New ADC mask: ' packet.adc_mask]);
+                warning(AdcMaskWarningMsg);
+                break
+            end
             device_info = packet;
         case 'disconnect'
             timestamp = packet;
+        case 'unimplemented'
+            continue
         otherwise
             read = 0;
     end
