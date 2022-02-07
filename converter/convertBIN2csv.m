@@ -38,7 +38,7 @@ while read
         case {'eeg4', 'eeg8'}
             nSample = size(packet.data, 2);
             t = linspace(packet.timestamp, packet.timestamp + ...
-                (nSample - 1)/device_info.data_rate, nSample);
+                (nSample - 1)/device_info.data_rate, nSample);  % Extrapolate sample timestamps
             EEG.data = cat(2, EEG.data, packet.data);
             EEG.timestamp = cat(2,EEG.timestamp, t);
         case 'marker_event'
