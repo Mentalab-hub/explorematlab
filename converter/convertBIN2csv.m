@@ -11,8 +11,8 @@ filepath = strcat(path,file);
 
 AdcMaskWarningMsg = ['The ADC mask has been changed in the binary' ...
                     ' file. This script is not able to process such ' ...
-                    'a binary file. Please use Explorepy for '... 
-                    'converting the file.'];
+                    'a binary file. Please use Explorepy to '... 
+                    'convert the file.'];
                 
 fid = fopen(filepath);
 read = 1;
@@ -60,7 +60,7 @@ while read
             end
             device_info = packet;
         case 'disconnect'
-            timestamp = packet;
+            disconnect = packet;
         case 'unimplemented'
             continue
         otherwise
