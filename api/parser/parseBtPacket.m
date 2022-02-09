@@ -34,7 +34,9 @@ function [output] = parseBtPacket(fid)
 
 output = [];
 
-interruptWarning = 'Stream interrupted unexpectedly!';
+EXG_UNIT = 1e-6;
+TIMESTAMP_SCALE = 10000;
+interruptWarning = 'Stream interrupted unexpectedly! End of file/stream!';
 fletcherMismatchWarning = 'Fletcher mismatch!';
 pidUnexpectedWarning = 'Unexpected package ID: ';
 
@@ -46,7 +48,7 @@ if n==0
 end
 output.cnt = fread(fid,1,'uint8');        % Counter of the package
 payload = fread(fid,1,'uint16');    % Number of bytes in the package
-output.timestamp = fread(fid,1,'uint32')/100;  % Timestamp of the package in second
+output.timestamp = fread(fid,1,'uint32')/TIMESTAMP_SCALE;  % Timestamp of the package in second
 
 switch pid
     case 13         % Orientation package
@@ -100,7 +102,7 @@ switch pid
             temp = reshape(temp,[nChan,nPacket]);
             output.data = double(temp)* vref / ( 2^23 - 1 ) / 6; % Calculate the real voltage value
         end
-        
+        output.data = round(output.data/EXG_UNIT, 2);
     case 27
         output.type = 'ts';
         output.ts = fread(fid,(payload-8)/4,'uint32');
@@ -115,6 +117,9 @@ switch pid
     case 194
         output.type = 'marker_event';
         output.code = fread(fid,1,'uint16');
+    case {192, 193, 195}    % Not implemented packets
+        fread(fid, payload-8, 'uint8');
+        output.type = 'unimplemented';
     otherwise
         warning([pidUnexpectedWarning pid])
         temp = fread(fid,payload-8,'uint8'); % Read the payload
