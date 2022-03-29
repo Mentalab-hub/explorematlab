@@ -7,6 +7,11 @@
 
 % Get the path to binary file
 [file,path] = uigetfile('*.BIN');
+if file == 0
+  % user pressed cancel
+  fprintf('File selection cancelled');
+  return
+end
 filepath = strcat(path,file);
 
 AdcMaskWarningMsg = ['The ADC mask has been changed in the binary' ...
@@ -32,6 +37,16 @@ TS = [];
 while read
     packet = parseBtPacket(fid);
     switch packet.type
+        case 'dev_info'
+            if ~exist('device_info', 'var') || isempty(device_info)
+                    disp('No device info discovered')
+            elseif ~strcmp(packet.adc_mask, device_info.adc_mask)
+                display(['Old ADC mask: ' device_info.adc_mask]);
+                display(['New ADC mask: ' packet.adc_mask]);
+                warning(AdcMaskWarningMsg);
+                break
+            end
+            device_info = packet;
         case 'orn'
             ORN.data = cat(2, ORN.data, packet.orn);
             ORN.timestamp = cat(2, ORN.timestamp, packet.timestamp);
@@ -40,7 +55,7 @@ while read
             t = linspace(packet.timestamp, packet.timestamp + ...
                 (nSample - 1)/device_info.data_rate, nSample);  % Extrapolate sample timestamps
             EEG.data = cat(2, EEG.data, packet.data);
-            EEG.timestamp = cat(2,EEG.timestamp, t);
+            EEG.timestamp = cat(2, EEG.timestamp, t);
         case 'marker_event'
             Marker.timestamp = cat(1, Marker.timestamp, packet.timestamp);
             Marker.code = cat(1, Marker.code, packet.code);
@@ -51,14 +66,6 @@ while read
             ENV.timestamp = cat(2, ENV.timestamp, packet.timestamp);
         case 'ts'
             TS = cat(2, TS, packet.ts);
-        case 'dev_info'
-            if exist('device_info', 'var') && ~strcmp(packet.adc_mask, device_info.adc_mask)
-                display(['Old ADC mask: ' device_info.adc_mask]);
-                display(['New ADC mask: ' packet.adc_mask]);
-                warning(AdcMaskWarningMsg);
-                break
-            end
-            device_info = packet;
         case 'disconnect'
             disconnect = packet;
         case 'unimplemented'
@@ -69,7 +76,4 @@ while read
 end
 
 %% Save data as csv files
-writeCSV(EEG, ORN, Marker, filepath); % Saves two csv files in the same directory as original binary file
-
-
-
+writeCSV(EEG, ORN, Marker, filepath, device_info); % Saves two csv files in the same directory as original binary file
