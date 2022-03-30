@@ -23,6 +23,7 @@ function writeCSV(EEG, ORN, Marker, file, device_info)
 %   Github page: https://github.com/Mentalab-hub/explorematlab/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+exg_units = "uV";
 nChan = size(EEG.data, 1);
 
 %% Writing the header
@@ -71,14 +72,14 @@ if fid_meta == -1
         ' Exiting.']))
     return
 end
-fprintf(fid_meta, 'sr, adcMask');
+fprintf(fid_meta, 'DateTime, Device, sr, adcMask, ExGUnits');
 
 %% Writing the data into csv file
 dlmwrite(csvFileName_eeg, cat(2, EEG.timestamp', EEG.data'), '-append', 'precision','%.4f');
 dlmwrite(csvFileName_orn, cat(2, ORN.timestamp', ORN.data'), '-append', 'precision','%.4f');
 dlmwrite(csvFileName_marker, cat(2, Marker.timestamp, Marker.code), '-append');
 % Cannot use the same method to write non-numerics (the adc_mask)
-writetable(cell2table([num2cell(device_info.data_rate), {device_info.adc_mask}]), csvFileName_meta, 'WriteMode', 'Append');
+writetable(cell2table([num2cell(device_info.data_rate), {device_info.adc_mask}, {exg_units}]), csvFileName_meta, 'WriteMode', 'Append');
 
 fclose(fid_eeg);
 fclose(fid_orn);

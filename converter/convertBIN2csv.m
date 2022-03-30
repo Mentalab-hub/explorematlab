@@ -38,9 +38,7 @@ while read
     packet = parseBtPacket(fid);
     switch packet.type
         case 'dev_info'
-            if ~exist('device_info', 'var') || isempty(device_info)
-                    disp('No device info discovered')
-            elseif ~strcmp(packet.adc_mask, device_info.adc_mask)
+            if ~strcmp(packet.adc_mask, device_info.adc_mask)
                 display(['Old ADC mask: ' device_info.adc_mask]);
                 display(['New ADC mask: ' packet.adc_mask]);
                 warning(AdcMaskWarningMsg);
@@ -51,6 +49,10 @@ while read
             ORN.data = cat(2, ORN.data, packet.orn);
             ORN.timestamp = cat(2, ORN.timestamp, packet.timestamp);
         case {'eeg4', 'eeg8'}
+            if ~exist('device_info', 'var') || isempty(device_info)
+                    warning('No device info discovered. Skipping.')
+                    break
+            end
             nSample = size(packet.data, 2);
             t = linspace(packet.timestamp, packet.timestamp + ...
                 (nSample - 1)/device_info.data_rate, nSample);  % Extrapolate sample timestamps
