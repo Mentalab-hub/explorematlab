@@ -33,12 +33,27 @@ ENV.battery = [];
 ENV.timestamp = [];
 TS = [];
 
+%% Get Device Info
+while read
+    packet = parseBtPacket(fid);
+    if (~strcmp(packet.type, 'dev_info'))
+        continue;
+    end
+    device_info = packet;
+    break;
+end
+
+% Following explorepy, we avoid missing data by reopening the file
+% and starting again once we are sure we have device info
+fclose('all');
+fid = fopen(filepath);
+
 %% Reading file
 while read
     packet = parseBtPacket(fid);
     switch packet.type
         case 'dev_info'
-            if ~strcmp(packet.adc_mask, device_info.adc_mask)
+            if exist('device_info', 'var') && ~strcmp(packet.adc_mask, device_info.adc_mask)
                 display(['Old ADC mask: ' device_info.adc_mask]);
                 display(['New ADC mask: ' packet.adc_mask]);
                 warning(AdcMaskWarningMsg);
@@ -49,10 +64,6 @@ while read
             ORN.data = cat(2, ORN.data, packet.orn);
             ORN.timestamp = cat(2, ORN.timestamp, packet.timestamp);
         case {'eeg4', 'eeg8'}
-            if ~exist('device_info', 'var') || isempty(device_info)
-                    warning('No device info discovered. Skipping.')
-                    break
-            end
             nSample = size(packet.data, 2);
             t = linspace(packet.timestamp, packet.timestamp + ...
                 (nSample - 1)/device_info.data_rate, nSample);  % Extrapolate sample timestamps
