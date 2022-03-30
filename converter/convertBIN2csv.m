@@ -78,4 +78,4 @@ while read
 end
 
 %% Save data as csv files
-writeCSV(EEG, ORN, Marker, filepath, device_info); % Saves two csv files in the same directory as original binary file
+writeCSV(EEG, ORN, Marker, filepath, device_info); % Saves four CSV files in the same directory as original binary file
