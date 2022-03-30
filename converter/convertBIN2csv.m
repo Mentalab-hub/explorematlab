@@ -52,14 +52,6 @@ fid = fopen(filepath);
 while read
     packet = parseBtPacket(fid);
     switch packet.type
-        case 'dev_info'
-            if exist('device_info', 'var') && ~strcmp(packet.adc_mask, device_info.adc_mask)
-                display(['Old ADC mask: ' device_info.adc_mask]);
-                display(['New ADC mask: ' packet.adc_mask]);
-                warning(AdcMaskWarningMsg);
-                break
-            end
-            device_info = packet;
         case 'orn'
             ORN.data = cat(2, ORN.data, packet.orn);
             ORN.timestamp = cat(2, ORN.timestamp, packet.timestamp);
@@ -79,6 +71,14 @@ while read
             ENV.timestamp = cat(2, ENV.timestamp, packet.timestamp);
         case 'ts'
             TS = cat(2, TS, packet.ts);
+        case 'dev_info'
+            if exist('device_info', 'var') && ~strcmp(packet.adc_mask, device_info.adc_mask)
+                display(['Old ADC mask: ' device_info.adc_mask]);
+                display(['New ADC mask: ' packet.adc_mask]);
+                warning(AdcMaskWarningMsg);
+                break
+            end
+            device_info = packet;
         case 'disconnect'
             disconnect = packet;
         case 'unimplemented'
