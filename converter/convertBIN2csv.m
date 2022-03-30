@@ -43,6 +43,10 @@ while read
     break;
 end
 
+if ~exist('device_info', 'var') || isempty(device_info)
+  error('No device info discovered in BIN file. Cannot proceed');
+end
+
 % Following explorepy, we avoid missing data by reopening the file
 % and starting again once we are sure we have device info
 fclose('all');
